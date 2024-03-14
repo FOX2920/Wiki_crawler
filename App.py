@@ -128,4 +128,4 @@ with gr.Blocks(title="Wikipedia Article Scrape | Data Science Dojo", css=css) as
                     fn=wikipediaScrap, inputs=[inp, lan], outputs=[title, content, url, linked, wordcloud],
                     cache_examples=True)
 
-demo.launch()
+demo.launch(share=True)
