@@ -1,0 +1,4 @@
+gradio
+wikipedia
+wordcloud
+uvicorn>=0.2.2
