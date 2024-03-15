@@ -14,7 +14,7 @@ def wikipediaScrap(article_name):
 
         # Generate WordCloud
         wordcloud = WordCloud(font_path="HelveticaWorld-Regular.ttf").generate(content)
-
+        st.set_option('deprecation.showPyplotGlobalUse', False)
         # Display WordCloud
         plt.figure(figsize=(10, 6))
         plt.imshow(wordcloud, interpolation='bilinear')
@@ -25,7 +25,7 @@ def wikipediaScrap(article_name):
     except wikipedia.exceptions.DisambiguationError as e:
         st.error(f"Xin lỗi, có quá nhiều kết quả phù hợp cho '{article_name}'. Vui lòng cung cấp thông tin chính xác hơn.")
 
-st.title("Wikipedia Article Scrape | Data Science Dojo")
+st.title("Wikipedia Article Scrape")
 article_name = st.text_input("Nhập tên bài viết trên Wikipedia", "")
 if st.button("Bắt đầu lấy thông tin"):
     if article_name:
