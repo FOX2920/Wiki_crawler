@@ -19,10 +19,10 @@ def wikipediaScrap(article_name, wikipedia_language="en"):
 st.title("Wikipedia Article Crawler")
 c1 = st.container(border=True)
 with c1:
-    article_name, wi-ln = st.columns(2)
+    article_name, wi_ln = st.columns(2)
     with article_name:
         article = st.text_input("Enter the name of wikipedia article")
-    with wi-ln:
+    with wi_ln:
          ln = st.selectbox("Select Language", ["en - English", "vi - Tiếng Việt"])
 
 if st.button("Start scraping"):
