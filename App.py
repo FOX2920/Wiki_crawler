@@ -43,6 +43,6 @@ if st.button("Start scraping"):
             plt.axis("off")
             st.pyplot() 
     st.subheader("Content")
-    st.write(content)
+    st.text_area('', value=content)
     st.subheader("Linked Articles")
     st.write(linked_pages)
