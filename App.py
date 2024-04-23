@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
-
+st.set_page_config(layout="wide")
 def wikipediaScrap(article_name, wikipedia_language="en"):
     wikipedia.set_lang(wikipedia_language)
     et_page = wikipedia.page(article_name)
