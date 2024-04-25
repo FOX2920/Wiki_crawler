@@ -9,13 +9,13 @@ To run this application locally, follow these steps:
 1. Clone this repository to your local machine:
 
     ```bash
-    git clone https://github.com/your_username/your_repository.git
+    git clone https://github.com/FOX2920/Wiki_crawler.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd your_repository
+    cd path/to/Wiki_crawler
     ```
 
 3. Install the required Python libraries:
