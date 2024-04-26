@@ -47,8 +47,7 @@ Once the application is running, users can interact with it through their web br
 - wordcloud
 
 ## Demo
-You can try out a live demo of this application [here](https://wikicrawler.streamlit.app/).
-
+You can try out a live demo of this application [here](https://wikicrawler-fc.streamlit.app/).
 ## Contributing
 Contributions are welcome! If you find any bugs or have suggestions for improvements, feel free to open an issue or submit a pull request.
 
