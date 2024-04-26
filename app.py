@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import wikipedia
 import json
+import uuid
 
 # Thiết lập ngôn ngữ Wikipedia
 wikipedia.set_lang("vi")
@@ -25,7 +26,7 @@ def wikipediaScrap(title_input):
         summary = wikipedia.summary(title_input, sentences=10)
         format_summary = format_content(summary)
         url = page.url
-        return {"Title": title, "Summary": format_summary, "URL": url}
+        return {"ID": str(uuid.uuid4()), "Title": title, "Summary": format_summary, "URL": url}
     except wikipedia.exceptions.DisambiguationError as e:
         return None
     except wikipedia.exceptions.PageError as e:
