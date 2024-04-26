@@ -3,3 +3,4 @@ wordcloud
 streamlit
 pandas
 nltk
+uuid
