@@ -62,7 +62,7 @@ def main():
 
         # Hiển thị DataFrame trước khi chọn các tiêu đề từ checkbox
         st.subheader("Danh sách bài viết từ Wikipedia:")
-        st.dataframe(df)
+        st.data_editor(df)
 
         # Hiển thị selectbox để chọn một tiêu đề
         selected_title = st.selectbox("Chọn một tiêu đề:", df["Title"])
