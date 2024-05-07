@@ -2,6 +2,9 @@ import streamlit as st
 from demo import main as demo_main
 from crawler import main as crawler_main
 
+# Thiết lập layout
+st.set_page_config(layout="wide")
+
 # Lựa chọn trang
 page = st.sidebar.selectbox("Chọn trang", ["Demo", "Crawler"])
 
