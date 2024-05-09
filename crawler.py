@@ -62,10 +62,7 @@ def main():
 
         # Hiển thị DataFrame trước khi chọn các tiêu đề từ checkbox
         st.subheader("Danh sách bài viết từ Wikipedia:")
-        column_config={
-        "URL": st.column_config.LinkColumn("URL"),
-        }
-        st.data_editor(df, column_configs=column_config)
+        st.dataframe(df, use_container_width=True, hide_index = True)
 
         # Hiển thị selectbox để chọn một tiêu đề
         selected_title = st.selectbox("Chọn một tiêu đề:", df["Title"])
