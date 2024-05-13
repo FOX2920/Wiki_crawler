@@ -88,7 +88,7 @@ def main():
 
             # Tạo CSV từ DataFrame và tải xuống
             csv = convert_df_to_csv(df)
-            csv_filename = "uit_" + ''.join(word[0] for word in uploaded_file.name.split()) + ".csv"
+            csv_filename = "uit_" + uploaded_file.name.split(".")[0] + ".csv"
             st.download_button(
                 label="Download CSV",
                 data=csv,
