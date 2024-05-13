@@ -26,7 +26,7 @@ def create_id(title, filename):
     return 'uit_' + article_id
 
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
-def wikipediaScrap(title_input, filename):
+def wikipedia_scrape(title_input, filename):
     try:
         # Lấy trang Wikipedia tương ứng với tiêu đề nhập vào
         page = wikipedia.page(title_input)
@@ -37,17 +37,16 @@ def wikipediaScrap(title_input, filename):
         url = page.url
         # Tạo ID từ tiêu đề và index
         article_id = create_id(title, filename)
-        return {"ID": article_id, "Title": title, "Topic": filename.split(".")[0],"Summary": format_summary, "URL": url}
+        return {"ID": article_id, "Title": title, "Topic": filename.split(".")[0], "Summary": format_summary, "URL": url}
     except wikipedia.exceptions.DisambiguationError as e:
         return None
     except wikipedia.exceptions.PageError as e:
         return None
-    
-@st.cache_data
-def convert_df(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
-    return df.to_csv().encode("utf-8")
 
+@st.cache
+def convert_df_to_csv(df):
+    # Chuyển DataFrame thành dữ liệu CSV và mã hóa UTF-8
+    return df.to_csv(index=False).encode("utf-8")
 
 # Ứng dụng Streamlit
 def main():
@@ -68,43 +67,48 @@ def main():
         # Lặp qua từng tiêu đề và lấy thông tin từ Wikipedia
         for index, title in enumerate(titles):
             title = title.strip()
-            article_info = wikipediaScrap(title, uploaded_file.name)
-            if article_info:
-                articles_info.append(article_info)
+            if title:  # Kiểm tra tiêu đề không trống
+                article_info = wikipedia_scrape(title, uploaded_file.name)
+                if article_info:
+                    articles_info.append(article_info)
+            else:
+                st.warning(f"Dòng {index + 1}: Tiêu đề trống")
 
-        # Tạo DataFrame từ thông tin bài viết
-        df = pd.DataFrame(articles_info)
+        # Kiểm tra nếu không có thông tin bài viết nào được thu thập
+        if not articles_info:
+            st.error("Không có bài viết nào được thu thập từ Wikipedia.")
 
-        # Hiển thị DataFrame trước khi chọn các tiêu đề từ checkbox
-        st.subheader("Danh sách bài viết từ Wikipedia:")
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        else:
+            # Tạo DataFrame từ thông tin bài viết
+            df = pd.DataFrame(articles_info)
 
-        csv = convert_df(df)
-        name = ''.join(word[0] for word in uploaded_file.name.split())
-        csv_filename = "uit_" + name + ".csv"
-        st.download_button(
-            label="Download",
-            data=csv,
-            file_name= csv_filename,
-            mime="text/csv",
-        )
+            # Hiển thị DataFrame trước khi chọn các tiêu đề từ checkbox
+            st.subheader("Danh sách bài viết từ Wikipedia:")
+            st.dataframe(df, use_container_width=True)
 
-        
-        
+            # Tạo CSV từ DataFrame và tải xuống
+            csv = convert_df_to_csv(df)
+            csv_filename = "uit_" + ''.join(word[0] for word in uploaded_file.name.split()) + ".csv"
+            st.download_button(
+                label="Download CSV",
+                data=csv,
+                file_name=csv_filename,
+                mime="text/csv",
+            )
 
-        # Hiển thị selectbox để chọn một tiêu đề
-        selected_title = st.selectbox("Chọn một tiêu đề:", df["Title"])
+            # Hiển thị selectbox để chọn một tiêu đề
+            selected_title = st.selectbox("Chọn một tiêu đề:", df["Title"])
 
-        # Lọc DataFrame theo tiêu đề được chọn
-        selected_df = df[df["Title"] == selected_title]
+            # Lọc DataFrame theo tiêu đề được chọn
+            selected_df = df[df["Title"] == selected_title]
 
-        # Chuyển DataFrame thành JSON
-        selected_json = selected_df.to_json(orient="records", lines=True)
+            # Chuyển DataFrame thành JSON
+            selected_json = selected_df.to_json(orient="records", lines=True)
 
-        # Hiển thị JSON nếu có tiêu đề được chọn
-        if selected_title:
-            st.subheader("Dữ liệu JSON của bài viết được chọn:")
-            st.json(json.loads(selected_json))
+            # Hiển thị JSON nếu có tiêu đề được chọn
+            if selected_title:
+                st.subheader("Dữ liệu JSON của bài viết được chọn:")
+                st.json(json.loads(selected_json))
 
 if __name__ == "__main__":
     main()
