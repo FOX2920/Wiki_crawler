@@ -19,7 +19,7 @@ def create_id(index, filename):
 
     name = ''.join(word[0] for word in filename.split())
     # Kết hợp với index
-    article_id = str(index) + '_' + name
+    article_id = str(index+1) + '_' + name
     # Thêm 'uit_' vào đầu ID
     return 'uit_' + article_id
 
@@ -82,7 +82,7 @@ def main():
 
             # Hiển thị DataFrame trước khi chọn các tiêu đề từ checkbox
             st.subheader("Danh sách bài viết từ Wikipedia:")
-            st.dataframe(df, use_container_width=True)
+            st.dataframe(df, use_container_width=True, hide_index=True)
 
             # Tạo CSV từ DataFrame và tải xuống
             csv = convert_df_to_csv(df)
