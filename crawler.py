@@ -2,11 +2,9 @@ import streamlit as st
 import pandas as pd
 import wikipedia
 import json
-import uuid
 
 # Thiết lập ngôn ngữ Wikipedia
 wikipedia.set_lang("vi")
-
 
 # Hàm để xử lý nội dung trước khi hiển thị
 def format_content(content):
@@ -16,8 +14,19 @@ def format_content(content):
     formatted_content = '\n\n'.join(paragraphs)
     return formatted_content
 
-# Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề
-def wikipediaScrap(title_input):
+# Hàm để tạo ID từ tiêu đề và index
+def create_id(title, filename):
+    # Lấy chữ cái đầu của từng từ trong tiêu đề
+    initials = ''.join(word[0] for word in title.split())
+
+    name = ''.join(word[0] for word in filename.split())
+    # Kết hợp với index
+    article_id = initials + '_' + name
+    # Thêm 'uit_' vào đầu ID
+    return 'uit_' + article_id
+
+# Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
+def wikipediaScrap(title_input, filename):
     try:
         # Lấy trang Wikipedia tương ứng với tiêu đề nhập vào
         page = wikipedia.page(title_input)
@@ -26,12 +35,18 @@ def wikipediaScrap(title_input):
         summary = wikipedia.summary(title_input, sentences=10)
         format_summary = format_content(summary)
         url = page.url
-        return {"ID": str(uuid.uuid4()), "Title": title, "Summary": format_summary, "URL": url}
+        # Tạo ID từ tiêu đề và index
+        article_id = create_id(title, filename)
+        return {"ID": article_id, "Title": title, "Topic": filename.split(".")[0],"Summary": format_summary, "URL": url}
     except wikipedia.exceptions.DisambiguationError as e:
         return None
     except wikipedia.exceptions.PageError as e:
         return None
-
+    
+@st.cache_data
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode("utf-8")
 
 
 # Ứng dụng Streamlit
@@ -51,9 +66,9 @@ def main():
         articles_info = []
 
         # Lặp qua từng tiêu đề và lấy thông tin từ Wikipedia
-        for title in titles:
+        for index, title in enumerate(titles):
             title = title.strip()
-            article_info = wikipediaScrap(title)
+            article_info = wikipediaScrap(title, uploaded_file.name)
             if article_info:
                 articles_info.append(article_info)
 
@@ -62,7 +77,20 @@ def main():
 
         # Hiển thị DataFrame trước khi chọn các tiêu đề từ checkbox
         st.subheader("Danh sách bài viết từ Wikipedia:")
-        st.dataframe(df, use_container_width=True, hide_index = True)
+        st.dataframe(df, use_container_width=True, hide_index=True)
+
+        csv = convert_df(df)
+        name = ''.join(word[0] for word in uploaded_file.name.split())
+        csv_filename = "uit_" + name + ".csv"
+        st.download_button(
+            label="Download",
+            data=csv,
+            file_name= csv_filename,
+            mime="text/csv",
+        )
+
+        
+        
 
         # Hiển thị selectbox để chọn một tiêu đề
         selected_title = st.selectbox("Chọn một tiêu đề:", df["Title"])
