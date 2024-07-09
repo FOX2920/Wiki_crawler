@@ -15,13 +15,12 @@ def format_content(content):
     return formatted_content
 
 # Hàm để tạo ID từ tiêu đề và index
-def create_id(index, filename):
-
-    name = ''.join(word[0] for word in filename.split())
+def create_id(index, title):
+    # Tạo id từ index và tiêu đề
+    title_abbr = ''.join(word[0] for word in title.split())
     # Kết hợp với index
-    article_id = str(index+1) + '_' + name
-    # Thêm 'uit_' vào đầu ID
-    return 'uit_' + article_id
+    article_id = 'uit_' + str(index + 2000) + '_' + title_abbr
+    return article_id
 
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
 def wikipedia_scrape(title_input, index, filename):
@@ -34,7 +33,7 @@ def wikipedia_scrape(title_input, index, filename):
         format_summary = format_content(summary)
         url = page.url
         # Tạo ID từ tiêu đề và index
-        article_id = create_id(index, filename)
+        article_id = create_id(index, title)
         return {"ID": article_id, "Title": title, "Topic": filename.split(".")[0], "Summary": format_summary, "URL": url}
     except wikipedia.exceptions.DisambiguationError as e:
         return None
