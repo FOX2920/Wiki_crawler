@@ -17,7 +17,8 @@ char_to_num = {
 # Hàm để xử lý nội dung trước khi hiển thị
 def format_content(content):
     cleaned_content = re.sub(r'==.*?==', '', content)
-    lines = cleaned_content.split("\n")
+    cleaned_text = re.sub(r'\n\s*\n', '\n', cleaned_content)
+    lines = cleaned_text.split("\n")
     cleaned_lines = [line.strip() for line in lines]
     formatted_content = "\n".join(cleaned_lines)
     return formatted_content
