@@ -6,6 +6,13 @@ import json
 # Thiết lập ngôn ngữ Wikipedia
 wikipedia.set_lang("vi")
 
+# Bảng tra cứu chữ cái và số tương ứng theo bảng chữ cái tiếng Việt
+char_to_num = {
+    'A': 1, 'Ă': 2, 'Â': 3, 'B': 4, 'C': 5, 'D': 6, 'Đ': 7, 'E': 8, 'Ê': 9, 'G': 10,
+    'H': 11, 'I': 12, 'K': 13, 'L': 14, 'M': 15, 'N': 16, 'O': 17, 'Ô': 18, 'Ơ': 19,
+    'P': 20, 'Q': 21, 'R': 22, 'S': 23, 'T': 24, 'U': 25, 'Ư': 26, 'V': 27, 'X': 28, 'Y': 29
+}
+
 # Hàm để xử lý nội dung trước khi hiển thị
 def format_content(content):
     # Tách nội dung thành các đoạn
@@ -14,13 +21,20 @@ def format_content(content):
     formatted_content = '\n\n'.join(paragraphs)
     return formatted_content
 
+# Hàm để chuyển các ký tự thành số dựa trên bảng tra cứu
+def chars_to_nums(s):
+    return ''.join(str(char_to_num.get(char.upper(), 0)) for char in s if char.upper() in char_to_num)
+
 # Hàm để tạo ID từ tiêu đề và chủ đề
 def create_id(title, topic):
     # Lấy các ký tự đầu của các từ trong title và topic
-    title_abbr = ''.join([word[0] for word in title.split() if word]).upper()
-    topic_abbr = ''.join([word[0] for word in topic.split() if word]).upper()
-    # Kết hợp các ký tự đầu với index
-    article_id = f'uit_{title_abbr}_{topic_abbr}'
+    title_abbr = ''.join([word[0] for word in title.split() if word])
+    topic_abbr = ''.join([word[0] for word in topic.split() if word])
+    # Chuyển các ký tự thành số
+    title_num = chars_to_nums(title_abbr)
+    topic_num = chars_to_nums(topic_abbr)
+    # Kết hợp các số với nhau bằng dấu gạch dưới
+    article_id = f'uit_{title_num}_{topic_num}'
     return article_id
 
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
@@ -36,7 +50,7 @@ def wikipedia_scrape(title_input, index, filename):
         # Tạo ID từ tiêu đề và chủ đề
         topic = filename.split(".")[0]
         article_id = create_id(title, topic)
-        return {"ID": article_id, "Title": title, "Topic": filename.split(".")[0], "Summary": format_summary, "URL": url}
+        return {"ID": article_id, "Title": title, "Topic": topic, "Summary": format_summary, "URL": url}
     except wikipedia.exceptions.DisambiguationError as e:
         return None
     except wikipedia.exceptions.PageError as e:
