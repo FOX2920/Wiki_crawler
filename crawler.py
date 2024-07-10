@@ -16,20 +16,10 @@ char_to_num = {
 # Hàm để xử lý nội dung trước khi hiển thị
 def format_content(content):
     lines = content.split("\n")
-    cleaned_lines = []
-    skip_line = False
-    
-    for line in lines:
-        if line.startswith("== ") and line.endswith(" =="):
-            skip_line = True
-        elif skip_line:
-            if line.endswith(" =="):
-                skip_line = False
-        else:
-            cleaned_lines.append(line.strip())
-    
+    cleaned_lines = [line.strip("=").strip() for line in lines]
     formatted_content = "\n\n".join(cleaned_lines)
     return formatted_content
+
 # Hàm để chuyển các ký tự thành số dựa trên bảng tra cứu và giới hạn số tối đa là 4
 def chars_to_nums(s):
     return ''.join(str((char_to_num.get(char.upper(), 0) % 4) + 1) for char in s if char.upper() in char_to_num)
