@@ -33,8 +33,9 @@ def wikipedia_scrape(title_input, index, filename):
         summary = wikipedia.summary(title_input, sentences=10)
         format_summary = format_content(summary)
         url = page.url
-        # Tạo ID từ tiêu đề và index
-        article_id = create_id(index, title)
+        # Tạo ID từ tiêu đề và chủ đề
+        topic = filename.split(".")[0]
+        article_id = create_id(title, topic)
         return {"ID": article_id, "Title": title, "Topic": filename.split(".")[0], "Summary": format_summary, "URL": url}
     except wikipedia.exceptions.DisambiguationError as e:
         return None
