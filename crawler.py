@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import wikipedia
 import json
+import hashlib
 
 # Thiết lập ngôn ngữ Wikipedia
 wikipedia.set_lang("vi")
@@ -14,12 +15,17 @@ def format_content(content):
     formatted_content = '\n\n'.join(paragraphs)
     return formatted_content
 
-# Hàm để tạo ID từ tiêu đề và index
-def create_id(index, title):
-    # Tạo id từ index và tiêu đề
-    title_abbr = ''.join(word[0] for word in title.split())
-    # Kết hợp với index
-    article_id = 'uit_' + str(index + 2000) + '_' + title_abbr
+# Hàm băm để tạo id từ title và topic
+def create_hash(input_str):
+    return hashlib.md5(input_str.encode()).hexdigest()[:6]
+
+# Hàm để tạo ID từ tiêu đề và chủ đề
+def create_id(title, topic):
+    # Tạo id từ title và topic
+    title_id = create_hash(title)
+    topic_id = create_hash(topic)
+    # Kết hợp với dấu _
+    article_id = f'uit_{title_id}_{topic_id}'
     return article_id
 
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
