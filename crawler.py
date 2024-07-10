@@ -3,6 +3,9 @@ import pandas as pd
 import wikipedia
 import json
 import re
+import nltk
+nltk.download('punkt')
+from nltk.tokenize import sent_tokenize
 
 # Thiết lập ngôn ngữ Wikipedia
 wikipedia.set_lang("vi")
@@ -49,10 +52,12 @@ def wikipedia_scrape(title_input, index, filename):
         summary = wikipedia.summary(title_input, sentences=10)
         format_summary = format_content(summary)
         url = page.url
+        # Tách các câu từ nội dung
+        sentences = sent_tokenize(format_summary)
         # Tạo ID từ tiêu đề và chủ đề
         topic = filename.split(".")[0]
         article_id = create_id(title, topic)
-        return {"ID": article_id, "Title": title, "Topic": topic, "Summary": format_summary, "URL": url}
+        return {"ID": article_id, "Title": title, "Topic": topic, "Summary": format_summary, "Sentences": sentences, "URL": url}
     except wikipedia.exceptions.DisambiguationError as e:
         return None
     except wikipedia.exceptions.PageError as e:
