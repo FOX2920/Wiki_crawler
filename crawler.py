@@ -20,7 +20,7 @@ def format_content(content):
     cleaned_text = re.sub(r'\n\s*\n', '\n', cleaned_content)
     lines = cleaned_text.split("\n")
     cleaned_lines = [line.strip() for line in lines]
-    formatted_content = "\n".join(cleaned_lines)
+    formatted_content = "\n\n".join(cleaned_lines)
     return formatted_content
 
 # Hàm để chuyển các ký tự thành số dựa trên bảng tra cứu và giới hạn số tối đa là 4
