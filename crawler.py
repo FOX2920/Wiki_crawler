@@ -21,40 +21,21 @@ def format_content(content):
     formatted_content = '\n\n'.join(paragraphs)
     return formatted_content
 
-# Hàm để chuyển các ký tự thành số dựa trên bảng tra cứu
+# Hàm để chuyển các ký tự thành số dựa trên bảng tra cứu và giới hạn số tối đa là 4
 def chars_to_nums(s):
-    return ''.join(str(char_to_num.get(char.upper(), 0)) for char in s if char.upper() in char_to_num)
+    return ''.join(str((char_to_num.get(char.upper(), 0) % 4) + 1) for char in s if char.upper() in char_to_num)
 
 # Hàm để tạo ID từ tiêu đề và chủ đề
 def create_id(title, topic):
     # Lấy các ký tự đầu của các từ trong title và topic
     title_abbr = ''.join([word[0] for word in title.split() if word])
     topic_abbr = ''.join([word[0] for word in topic.split() if word])
-    # Chuyển các ký tự thành số
+    # Chuyển các ký tự thành số và giới hạn số tối đa là 4
     title_num = chars_to_nums(title_abbr)
     topic_num = chars_to_nums(topic_abbr)
     # Kết hợp các số với nhau bằng dấu gạch dưới
     article_id = f'uit_{title_num}_{topic_num}'
     return article_id
-
-# Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
-def wikipedia_scrape(title_input, index, filename):
-    try:
-        # Lấy trang Wikipedia tương ứng với tiêu đề nhập vào
-        page = wikipedia.page(title_input)
-        title = page.title
-        # Lấy tóm tắt và liên kết của trang Wikipedia
-        summary = wikipedia.summary(title_input, sentences=10)
-        format_summary = format_content(summary)
-        url = page.url
-        # Tạo ID từ tiêu đề và chủ đề
-        topic = filename.split(".")[0]
-        article_id = create_id(title, topic)
-        return {"ID": article_id, "Title": title, "Topic": topic, "Summary": format_summary, "URL": url}
-    except wikipedia.exceptions.DisambiguationError as e:
-        return None
-    except wikipedia.exceptions.PageError as e:
-        return None
 
 @st.cache
 def convert_df_to_csv(df):
