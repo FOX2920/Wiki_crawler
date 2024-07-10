@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import wikipedia
 import json
+import re
 
 # Thiết lập ngôn ngữ Wikipedia
 wikipedia.set_lang("vi")
