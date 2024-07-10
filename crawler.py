@@ -34,7 +34,7 @@ def create_id(title, topic):
     title_num = chars_to_nums(title_abbr)
     topic_num = chars_to_nums(topic_abbr)
     # Kết hợp các số với nhau bằng dấu gạch dưới
-    article_id = f'uit_{title_num}_{topic_num}'
+    article_id = f'uit_{topic_num}_{title_num}'
     return article_id
 
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
