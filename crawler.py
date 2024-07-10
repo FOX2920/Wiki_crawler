@@ -39,9 +39,9 @@ def create_id(title, topic):
     article_id = f'uit_{topic_num}_{title_num}'
     return article_id
 
-# Hàm để tách câu từ tóm tắt, bỏ qua dấu ...
+# Hàm để tách câu từ tóm tắt, tính cả dấu ...
 def split_sentences(text):
-    return re.split(r'(?<!\.\.\.)(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|!|。|！|？)(?<!\.\.\.)\s+', text)
+    return re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|!|。|！|？|\.\.\.)\s+', text)
 
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
 def wikipedia_scrape(title_input, index, filename):
