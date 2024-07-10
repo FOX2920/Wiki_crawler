@@ -37,6 +37,25 @@ def create_id(title, topic):
     article_id = f'uit_{title_num}_{topic_num}'
     return article_id
 
+# Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
+def wikipedia_scrape(title_input, index, filename):
+    try:
+        # Lấy trang Wikipedia tương ứng với tiêu đề nhập vào
+        page = wikipedia.page(title_input)
+        title = page.title
+        # Lấy tóm tắt và liên kết của trang Wikipedia
+        summary = wikipedia.summary(title_input, sentences=10)
+        format_summary = format_content(summary)
+        url = page.url
+        # Tạo ID từ tiêu đề và chủ đề
+        topic = filename.split(".")[0]
+        article_id = create_id(title, topic)
+        return {"ID": article_id, "Title": title, "Topic": topic, "Summary": format_summary, "URL": url}
+    except wikipedia.exceptions.DisambiguationError as e:
+        return None
+    except wikipedia.exceptions.PageError as e:
+        return None
+
 @st.cache
 def convert_df_to_csv(df):
     # Chuyển DataFrame thành dữ liệu CSV và mã hóa UTF-8
