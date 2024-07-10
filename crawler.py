@@ -121,4 +121,15 @@ def main():
             selected_title = st.selectbox("Chọn một tiêu đề:", df["Title"])
 
             # Lọc DataFrame theo tiêu đề được chọn
-            selected_df = df[df
+            selected_df = df[df["Title"] == selected_title]
+
+            # Chuyển DataFrame thành JSON
+            selected_json = selected_df.to_json(orient="records", lines=True)
+
+            # Hiển thị JSON nếu có tiêu đề được chọn
+            if selected_title:
+                st.subheader("Dữ liệu JSON của bài viết được chọn:")
+                st.json(json.loads(selected_json))
+
+if __name__ == "__main__":
+    main()
