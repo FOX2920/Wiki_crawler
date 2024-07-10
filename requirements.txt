@@ -3,4 +3,4 @@ wordcloud
 streamlit
 pandas
 nltk
-uuid
+hashlib
