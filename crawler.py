@@ -41,7 +41,12 @@ def create_id(title, topic):
 
 # Hàm để tách câu từ tóm tắt, tính cả dấu ...
 def split_sentences(text):
-    return re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|!|。|！|？|\.\.\.)\s+', text)
+    # Thay thế dấu ba chấm bằng một ký tự đặc biệt tạm thời
+    text = text.replace('...', '§§§')
+    sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|!|。|！|？)\s+', text)
+    # Khôi phục dấu ba chấm
+    sentences = [sentence.replace('§§§', '...') for sentence in sentences]
+    return sentences
 
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
 def wikipedia_scrape(title_input, index, filename):
