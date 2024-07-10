@@ -19,6 +19,7 @@ def format_content(content):
     cleaned_content = re.sub(r'==.*?==', '', content)
     lines = cleaned_content.split("\n")
     cleaned_lines = [line.strip() for line in lines]
+    formatted_content = "\n".join(cleaned_lines)
     return formatted_content
 
 # Hàm để chuyển các ký tự thành số dựa trên bảng tra cứu và giới hạn số tối đa là 4
