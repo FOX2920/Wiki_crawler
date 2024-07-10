@@ -3,9 +3,6 @@ import pandas as pd
 import wikipedia
 import json
 import re
-import nltk
-nltk.download('punkt')
-from nltk.tokenize import sent_tokenize
 
 # Thiết lập ngôn ngữ Wikipedia
 wikipedia.set_lang("vi")
@@ -42,6 +39,10 @@ def create_id(title, topic):
     article_id = f'uit_{topic_num}_{title_num}'
     return article_id
 
+# Hàm để tách câu từ tóm tắt, bỏ qua dấu ...
+def split_sentences(text):
+    return re.split(r'(?<!\.\.\.)(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|!|。|！|？)(?<!\.\.\.)\s+', text)
+
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
 def wikipedia_scrape(title_input, index, filename):
     try:
@@ -52,11 +53,11 @@ def wikipedia_scrape(title_input, index, filename):
         summary = wikipedia.summary(title_input, sentences=10)
         format_summary = format_content(summary)
         url = page.url
-        # Tách các câu từ nội dung
-        sentences = sent_tokenize(format_summary)
         # Tạo ID từ tiêu đề và chủ đề
         topic = filename.split(".")[0]
         article_id = create_id(title, topic)
+        # Tạo danh sách câu từ tóm tắt
+        sentences = split_sentences(format_summary)
         return {"ID": article_id, "Title": title, "Topic": topic, "Summary": format_summary, "Sentences": sentences, "URL": url}
     except wikipedia.exceptions.DisambiguationError as e:
         return None
@@ -120,15 +121,4 @@ def main():
             selected_title = st.selectbox("Chọn một tiêu đề:", df["Title"])
 
             # Lọc DataFrame theo tiêu đề được chọn
-            selected_df = df[df["Title"] == selected_title]
-
-            # Chuyển DataFrame thành JSON
-            selected_json = selected_df.to_json(orient="records", lines=True)
-
-            # Hiển thị JSON nếu có tiêu đề được chọn
-            if selected_title:
-                st.subheader("Dữ liệu JSON của bài viết được chọn:")
-                st.json(json.loads(selected_json))
-
-if __name__ == "__main__":
-    main()
+            selected_df = df[df
