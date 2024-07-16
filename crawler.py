@@ -28,15 +28,11 @@ def chars_to_nums(s):
     return ''.join(str((char_to_num.get(char.upper(), 0) % 4) + 1) for char in s if char.upper() in char_to_num)
 
 # Hàm để tạo ID từ tiêu đề và chủ đề
-def create_id(title, topic):
-    # Lấy các ký tự đầu của các từ trong title và topic
-    title_abbr = ''.join([word[0] for word in title.split() if word])
-    topic_abbr = ''.join([word[0] for word in topic.split() if word])
+def create_id(topic, stt):
     # Chuyển các ký tự thành số và giới hạn số tối đa là 4
-    title_num = chars_to_nums(title_abbr)
-    topic_num = chars_to_nums(topic_abbr)
+    topic_num = chars_to_nums(topic)
     # Kết hợp các số với nhau bằng dấu gạch dưới
-    article_id = f'uit_{topic_num}_{title_num}'
+    article_id = f'uit_{topic_num}_{stt}'
     return article_id
 
 # Hàm để tách câu từ tóm tắt, bỏ qua dấu ...
@@ -44,7 +40,7 @@ def split_sentences(text):
     return re.split(r'(?<!\.\.\.)(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|!|。|！|？)(?<!\.\.\.)\s+', text)
 
 # Hàm để lấy thông tin từ Wikipedia dựa trên tiêu đề và index
-def wikipedia_scrape(title_input, index, filename):
+def wikipedia_scrape(title_input, stt, filename):
     try:
         # Lấy trang Wikipedia tương ứng với tiêu đề nhập vào
         page = wikipedia.page(title_input)
@@ -55,7 +51,7 @@ def wikipedia_scrape(title_input, index, filename):
         url = page.url
         # Tạo ID từ tiêu đề và chủ đề
         topic = filename.split(".")[0]
-        article_id = create_id(title, topic)
+        article_id = create_id(topic, stt)
         # Tạo danh sách câu từ tóm tắt
         sentences = split_sentences(format_summary)
         return {"ID": article_id, "Title": title, "Topic": topic, "Summary": format_summary, "Sentences": sentences, "URL": url}
@@ -89,7 +85,7 @@ def main():
         for index, title in enumerate(titles):
             title = title.strip()
             if title:  # Kiểm tra tiêu đề không trống
-                article_info = wikipedia_scrape(title, index, uploaded_file.name)
+                article_info = wikipedia_scrape(title, index + 1, uploaded_file.name)  # Sử dụng index + 1 làm stt
                 if article_info:
                     articles_info.append(article_info)
             else:
