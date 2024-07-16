@@ -29,10 +29,8 @@ def chars_to_nums(s):
 
 # Hàm để tạo ID từ tiêu đề và chủ đề
 def create_id(topic, stt):
-    title_abbr = ''.join([word[0] for word in title.split() if word])
     topic_abbr = ''.join([word[0] for word in topic.split() if word])
     # Chuyển các ký tự thành số và giới hạn số tối đa là 4
-    title_num = chars_to_nums(title_abbr)
     topic_num = chars_to_nums(topic_abbr)
     # Kết hợp các số với nhau bằng dấu gạch dưới
     article_id = f'uit_{topic_num}_{stt}'
